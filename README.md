@@ -97,7 +97,7 @@ Next we have:
 **config** holds configuration JS files for each app. In this demo, `app1.config.js` and `app2.config.js`.  
 
 Only thing they differ is line #14:  
-++`'app': '/App1',`++ | ++`'app': '/App2',`++  
+**'app': '/App1',** | **'app': '/App2',**  
 which points to the locations where apps live.  
 
 Last directory to mention is **environments**.  
