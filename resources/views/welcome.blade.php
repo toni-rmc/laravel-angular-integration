@@ -81,8 +81,8 @@
                 <div class="title m-b-md">
                     Laravel
                 </div>
-                <div><a href="{{ route('app1') }}">App 1</a></div>
-                <div><a href="{{ route('app2') }}">App 2</a></div>
+                <div><a href="{{ route('app1') }}">Angular App 1</a></div>
+                <div><a href="{{ route('app2') }}">Angular App 2</a></div>
                 <div class="links">
                     <a href="https://laravel.com/docs">Documentation</a>
                     <a href="https://laracasts.com">Laracasts</a>

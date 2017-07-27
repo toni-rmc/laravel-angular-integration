@@ -3,60 +3,37 @@
 This project provides tools and shows you an easy way to integrate one or more Angular apps into your Laravel project.  
 You can clone code from here and start integrating or you can do it [without cloning](#set-up-angular-in-existing-laravel-project) code from here if you have existing project or future versions of Laravel have different file stucture.  
 
-### Prerequisites  
-
-* [PHP](http://www.php.net/downloads.php) - if you are on Windows use this link [PHP](http://windows.php.net/download)
-* [Composer](https://getcomposer.org/doc/00-intro.md)
-* [Node.js](https://nodejs.org/en/download/)
-* **npm** - *you will get npm with Node.js installation*
-* **Database** - *of your choice, although you don't need it for these examples alone*
-
 ## Getting Started  
 
 After you clone and install code you can test right away from default Laravel welcome page.  
-Example has two Angular demo apps to which you can go by clicking the links **App 1** and **App 2** on the home welcome page.  
+This project has two Angular demo apps to which you can go by clicking the links **Angular App 1** and **Angular App 2** on the home welcome page.  
 
 ### Installing  
 
-Once you have the code, you can set up a database connection just like with any other Laravel project but for this examples alone you don't have to. **cd**  to your project directory and use composer to install all the dependencies.  
+Once you have the code, you can set up a database connection just like with any other Laravel project but for this examples alone you don't have to.  
+**cd**  to your project directory and use composer to install all the dependencies.  
 
 ```
 cd <your_project_dir>
 composer install
 ```
-composer will call `npm install` and `npm run ng-init` in the post-install script so, depending on your machine, it will take a minut or more to install Laravel dependencies, npm dependencies and to initialize Angular.  
 
----
-**`Important!`**
-Before `composer install` call this command:  
-
-```PHP
-composer config --global process-timeout 2000
-```
-
-You only have to call it once so after you run it one time, forget about it. That means for all following Laravel projects you don't have to call this command after you do it once.  
-It is needed because composer will time-out and abort processes that run longer than 300 seconds and to make sure things go smoothly we increase that value to 2000.  
-I strongly recommend using it since I have put `npm install` and `npm run ng-init` in *"post-install-cmd"* script of the **composer.json**.  
-Dependencies installation and those two commands together can take some time to initially install so be patient.  
-This command does lots of work and even if you don't see console text updating for some time it hasn't stuck, just does work in the background, so again, be patient.  
-You will see some warnings, they are nothing serious and you will only do this command once. For later **composer** calls you use `composer update`.  
-
-Alternatively you can remove `npm install` and `npm run ng-init` from the **composer.json**'s *"post-install-cmd"* script and call those commands manually right after `composer install`.  
-In that case workflow would be:
+Than install JavaScript dependencies with **npm**.  
 
 ```
-composer install
 npm install
+```
+
+Initialize Agular and compile and publish code with these two commands.  
+
+```
 npm run ng-init
-```
-
----
-
-
-After finishing issue these commands:  
-
-```
 npm run ng-compile
+```
+
+Start development web server.  
+
+```
 php artisan serve
 ```
 
@@ -97,7 +74,10 @@ Next we have:
 **config** holds configuration JS files for each app. In this demo, `app1.config.js` and `app2.config.js`.  
 
 Only thing they differ is line #14:  
-**'app': '/App1',** | **'app': '/App2',**  
+
+**'app': '/App1',**  
+**'app': '/App2',**  
+
 which points to the locations where apps live.  
 
 Last directory to mention is **environments**.  
@@ -115,7 +95,7 @@ Next we have some files:
 
 ## `public` Directory  
 
-After you run `npm run ng-compile` you will notice some new files and directories in your `public` directory.  
+After you run `npm run ng-init` and `npm run ng-compile` you will notice some new files and directories in your `public` directory.  
 
 * App1
 * App2
@@ -132,8 +112,8 @@ Basically all of your HTML, CSS, JS and compiled TS files from `angular_apps` ar
 
 Before you run commands make sure you **cd** to your Laravel project root directory.  
 
-* **`npm run ng-init`** - *if  you delete **Ng** directory you can recreate it with this command.  
-Also if you use **npm** to update to a new version of Angular you can use this command to update new version to `public/Ng` directory.  
+* **`npm run ng-init`** - *creates `Ng` directory in `public` and initializes Angular in it.  
+Also if you use **npm install** or **npm update** to update to a new version of Angular you can use this command to push new version of Angular to `public/Ng` directory.  
 In that case you don't have to delete `public/Ng` directory, running this command will reinstall all files and add new ones, if any.*  
 
 * **`npm run ng-compile`** - *distributes your HTML, JS, CSS files and compiles TS files to JavaScript and distributes them also.*  
@@ -186,7 +166,7 @@ You can pass `--build` switch to only remove empty directories and sub-directori
   *This command might come handy if you have some empty directories in `public` and/or `angular_apps` after deleting files while running `npm run ng-watch` command.*  
 
 **More about `npm run ng-watch`**  
-If you use `localhost:8000` as your host:port when you start your development server, you can use this command as is.  
+If you use `127.0.0.1:8000` as your host:port when you start your development server, you can use this command as is.  
 This is the default host and port when you start development server like this `php artisan serve`.  
 However if you have development server started using some other host and/or port you can use this command in combination with `--hp` switch.  
 

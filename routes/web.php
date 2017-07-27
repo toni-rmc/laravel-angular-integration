@@ -22,7 +22,7 @@ Route::get('angular-app1/{path?}', function () {
 })->where('path', '.*')
   ->name('app1');
 
-Route::get('angular-app2/pods/{path?}', function () {
+Route::get('angular-app2/{path?}', function () {
     return view('NgApp2');
 })->where('path', '.*')
   ->name('app2');
