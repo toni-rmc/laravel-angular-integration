@@ -41,8 +41,14 @@ gulp.task('compile', ['publish'], actions.compileTS());
 // Initialize entire Angular environment.
 gulp.task('initNg', actions.initializeAngular());
 
-// Initialize Angular environment and compile and distribute Angular apps.
-gulp.task('bootstrapNg', ['initNg', 'compile']);
+// Publish 3rd party packages Angular applications will use.
+gulp.task('publish-packages', actions.publishPackages());
+
+// Delete published 3rd party packages from Angular directory.
+gulp.task('delete-packages', actions.deletePackages());
+
+// Initialize Angular environment, publish packages and compile and distribute Angular apps.
+gulp.task('bootstrapNg', ['initNg', 'publish-packages', 'compile']);
 
 // Assembles files and directories to be cleaned from distribution directory.
 gulp.task('assemble-for-clean', actions.assembleForCleaning());
@@ -469,6 +475,49 @@ function Actions()
 
             // Clear files-to-be-cleaned array.
             tbc = [];
+        }
+    };
+
+    /**
+     * Create function that publishes 3rd party libraries Angular apps may need.
+     * Read libraries from array and copy them from "node_modules" to the Angular directory.
+     *
+     * @access public
+     * @return function
+     */
+    this.publishPackages = function ()
+    {
+        var angular_directory = angular_dir;
+
+        const external = require('./resources/assets/js/ng-vendor');
+        let e = external.vendor_libraries();
+
+        let _3rd_party_libs = e.map(function (el) {return 'node_modules/' + el + '/**/*'; });
+
+        return function ()
+        {
+            return gulp.src(
+                _3rd_party_libs, { "base" : "node_modules" }).pipe(gulp.dest(angular_directory));
+        }
+    };
+
+    /**
+     * Create function that deletes 3rd party libraries.
+     * Read libraries from array and delete them from the Angular directory.
+     *
+     * @access public
+     * @return function
+     */
+    this.deletePackages = function ()
+    {
+        const external = require('./resources/assets/js/ng-vendor');
+        let e = external.vendor_libraries();
+
+        let _3rd_party_libs = e.map(function (el) {return angular_dir + '/' + el + '/**'; });
+
+        return function ()
+        {
+            return del.sync(_3rd_party_libs);
         }
     };
 

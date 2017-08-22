@@ -24,7 +24,7 @@ Than install JavaScript dependencies with **npm**.
 npm install
 ```
 
-Initialize Agular and compile and publish code with these two commands.  
+Initialize Angular and compile and publish code with these two commands.  
 
 ```
 npm run ng-init
@@ -121,7 +121,8 @@ In that case you don't have to delete `public/Ng` directory, running this comman
 * **`npm run ng-compile-prod`** - *same as the above but produces minified HTML and CSS files, also compiled JS files from the TS, are minified.  
 Note that original JS files in your `angular_apps` directory (the ones that were not TS) will not be minified by this command. That is because I can't find decent,stable and reliable Gulp plugin that supports minifing ES6, if you know of one let me know.*  
 
-* **`npm run ng-bootstrap`** - *this command is combination of `npm run ng-init` and `npm run ng-compile`, that is it installs Angular and compiles your apps in one go.*  
+* **`npm run ng-bootstrap`** - *this command is combination of `npm run ng-init`, `npm run ng-add-3rd-party` and `npm run ng-compile`, it installs Angular, installs 3rd party libraries and compiles your apps in one go.  
+It is useful when you join existing project. Whith just this command you can build working application on your machine and start working on it.*  
 
 * **`npm run ng-watch`** - *starts watch mode, starts browser and puts your browser in sync, actually all the browsers tabs that have wached URL open.  
 When you change, add, move, delete or rename HTML, JS, CSS and TS files in `angular_apps` it will distribute them in real time to `public`. TS files will be compiled to JS first than distributed.  
@@ -150,6 +151,37 @@ So if you have, for example, two files in `public/somedir`:*
 
   *First file `public/somedir/apples.js` would be deleted, second one `public/somedir/oranges.js` would be left.  
   Empty directories in distribution (`public`) directory and all nested empty directories will also be deleted if there is any.*  
+
+* **`npm run ng-add-3rd-party`** - *sometimes you have to use third-party libraries in your project. `npm run ng-init` initializes Angular and other standard libraries like `rxjs` but what if you need other libraries as well in your project?  
+Best way to explain is by example, so let's say you want to use a third-party library in your project e.g. **angular2-multiselect-dropdown**.  
+First install it of course using `npm install angular2-multiselect-dropdown --save`.  
+Than open `resources/assets/js/ng-vendor.js` and add library name to the return array of the `vendor_libraries` callback*  
+
+  ```JavaScript
+  exports.vendor_libraries = function() {
+      return [
+               'angular2-multiselect-dropdown',
+             ];
+  }
+  ```
+
+    *After that run this command `npm run ng-add-3rd-party`.  
+Next step is to tell SystemJS where from to load new library. Open `angular_apps/config/<app_name>.config.js` and as a last entry in `map` object add this mapping:*  
+
+  ```JavaScript
+  map: {
+      ...
+      // other libraries
+      ...
+      'angular2-multiselect-dropdown/angular2-multiselect-dropdown': 'npm:angular2-multiselect-dropdown/angular2-multiselect-dropdown.umd.js'
+  },
+  ```
+
+    *Last step is to run `npm run ng-compile`.  
+Than you can use external library in your application.  
+File `ng-vendor.js` is located outside of the Angular build directory (`angular_apps`), because it does not need to be published to distribution directory (`public`).*  
+
+* **`npm run ng-delete-3rd-party`** - *opposite of `npm run ng-add-3rd-party`. It will only remove 3rd party libraries from `public/Ng`, it does not remove them from `node_modules`.*  
 
 * **`npm run ng-remove-empty-dirs`** - *removes empty directories and all empty sub-directories from both buld (`angular_apps`) directory and distribution (`public`) directory.  
 Unlike `npm run ng-clean`, it does touch `angular_apps` directory and only removes empty directories, thats all it does.  
@@ -199,6 +231,8 @@ So for example, **not** ~~`php -S localhost:8080`~~, but `php -S 127.0.0.1:8080`
 ## Integrating Your Own Angular App  
 
 Details on how you integrate your own Angular app from start to finish:  
+
+> Directory in which this new app will be is gonna be called `NewApp`, in production you should use more descriptive name of what your app does e.g. `Store` or `StockManagement`. That way if you have more Angular applications you can see right away what each one is designated to do soon as you look into `angular-apps` directory.  
 
 If you already haven't done so trough composer or manually, run these commands.  
 

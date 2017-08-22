@@ -16,7 +16,9 @@
     "ng-watch": "gulp watch --sync",
     "ng-watch-nosync": "gulp watch",
     "ng-clean": "gulp clean",
-	"ng-remove-empty-dirs": "gulp remove-empty-dirs"
+    "ng-remove-empty-dirs": "gulp remove-empty-dirs",
+    "ng-add-3rd-party": "gulp publish-packages",
+    "ng-delete-3rd-party": "gulp delete-packages"
   },
   "dependencies": {
     "@angular/animations": "~4.3.1",
