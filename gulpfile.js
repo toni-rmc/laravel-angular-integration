@@ -2,6 +2,7 @@ var gulp = require('gulp');
 var path = require('path');
 var del = require('del');
 var gulpif = require('gulp-if');
+var sass = require('gulp-sass');
 var minifyJS = require('gulp-uglify');
 var minifyCSS = require('gulp-clean-css');
 var minifyHTML = require('gulp-htmlmin');
@@ -32,10 +33,14 @@ gulp.task('html', actions.emitHTML());
 // Move CSS files to distribution directory.
 gulp.task('css', actions.emitCSS());
 
-// Move JS, HTML and CSS files to distribution directory.
-gulp.task('publish', ['js', 'html', 'css']);
+// Compile SCSS and SASS files into CSS and move them to distribution directory.
+gulp.task('sass', actions.compileSASS());
 
-// Compile .TS into .JS.
+// Move JS, HTML, CSS and SASS/SCSS files to distribution directory.
+// SASS and SCSS files will be compiled to CSS.
+gulp.task('publish', ['js', 'html', 'css', 'sass']);
+
+// Compile TS files into JS and move them to distribution directory.
 gulp.task('compile', ['publish'], actions.compileTS());
 
 // Initialize entire Angular environment.
@@ -133,6 +138,7 @@ function Actions()
         js:                 [angular_apps + '/**/*.js'],
         html:               [angular_apps + '/**/*.html'],
         css:                [angular_apps + '/**/*.css'],
+        sass:               [angular_apps + '/**/*.scss', angular_apps + '/**/*.sass'],
     };
 
     /**
@@ -288,6 +294,36 @@ function Actions()
     };
 
     /**
+     * Create function that compiles SASS/SCSS and distributes compiled .css files.
+     *
+     * @access public
+     * @param  array|string|null  glob
+     * @param  string|null  dest
+     * @return function
+     */
+    this.compileSASS = function (glob, dest)
+    {
+    	var __glob = glob || Globs.sass;
+    	var __dest = dest || destination;
+        var min_sass = null;
+
+        if (argv.minifySASS)
+        {
+            min_sass = {outputStyle: 'compressed'};
+        }
+
+        return function (cb)
+        {
+            pump([
+                    gulp.src(__glob),
+                    sass(min_sass).on('error', sass.logError),
+                    gulp.dest(__dest)
+                ],
+                cb);
+        }
+    };
+
+    /**
      * Create function that initializes browser synchronization and watching.
      *
      * @access public
@@ -335,16 +371,17 @@ function Actions()
         var actions = this;
         var ts_compile = Globs.typescript_compile;
         var js_html_css_compile = [].concat(Globs.js, Globs.html, Globs.css);
+        var sass_compile = Globs.sass;
 
         return function ()
         {
             // Watch for TS changes.
             watch(ts_compile, function (vinyl) {
 
-                var destFilePath = getDestinationFilePath(vinyl);
+                let destFilePath = getDestinationFilePath(vinyl);
 
                 // Replace .ts with .js to match compiled and distributed JS file.
-                var lastDot = destFilePath.lastIndexOf('.');
+                let lastDot = destFilePath.lastIndexOf('.');
                 destFilePath = destFilePath.substring(0, lastDot) + '.js';
 
                 if (vinyl.event == 'unlink')
@@ -362,7 +399,7 @@ function Actions()
             // Watch for JS, HTML and CSS changes.
             watch(js_html_css_compile, function (vinyl) {
 
-                var destFilePath = getDestinationFilePath(vinyl);
+                let destFilePath = getDestinationFilePath(vinyl);
                 if (vinyl.event == 'unlink')
                 {
                     del.sync(destFilePath);
@@ -372,12 +409,33 @@ function Actions()
                     // Follow convention to call appropriate function with correct glob.
 
                     // Returns "js", "html", or "css".
-                    var extension = destFilePath.split('.').pop();
+                    let extension = destFilePath.split('.').pop();
 
                     // Forge "emitJS", "emitHTML" or "emitCSS".
-                    var emit = 'emit' + extension.toUpperCase();
+                    let emit = 'emit' + extension.toUpperCase();
 
                     actions[emit]()();
+                }
+
+                fileEventNotify(destFilePath, vinyl.event);
+            });
+
+            // Watch for SASS changes.
+            watch(sass_compile, function (vinyl) {
+
+                let destFilePath = getDestinationFilePath(vinyl);
+
+                // Replace .scss or .sass with .js to match compiled and distributed CSS file.
+                let lastDot = destFilePath.lastIndexOf('.');
+                destFilePath = destFilePath.substring(0, lastDot) + '.css';
+
+                if (vinyl.event == 'unlink')
+                {
+                    del.sync(destFilePath);
+                }
+                else
+                {
+                    actions.compileSASS()();
                 }
 
                 fileEventNotify(destFilePath, vinyl.event);
@@ -411,7 +469,7 @@ function Actions()
      */
     this.assembleForCleaning = function ()
     {
-        var cl = [].concat(Globs.typescript_compile, Globs.js, Globs.html, Globs.css);
+        var cl = [].concat(Globs.typescript_compile, Globs.js, Globs.html, Globs.css, Globs.sass);
 
         return function ()
         {
@@ -424,8 +482,13 @@ function Actions()
 
                     if (path.extname(f) === '.ts')
                     {
-                        var lastDot = f.lastIndexOf('.');
+                        let lastDot = f.lastIndexOf('.');
                         f = f.substring(0, lastDot) + '.js';
+                    }
+                    else if (path.extname(f) === '.scss' || path.extname(f) === '.sass')
+                    {
+                        let lastDot = f.lastIndexOf('.');
+                        f = f.substring(0, lastDot) + '.css';
                     }
 
                     // Push files to be deleted.

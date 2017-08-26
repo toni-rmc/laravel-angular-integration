@@ -5,7 +5,7 @@ You can clone code from here and start integrating or you can do it [without clo
 
 ## Getting Started  
 
-After you clone and install code you can test right away from default Laravel welcome page.  
+After you clone code you can test right away from the default Laravel welcome page.  
 This project has two Angular demo apps to which you can go by clicking the links **Angular App 1** and **Angular App 2** on the home welcome page.  
 
 ### Installing  
@@ -43,29 +43,23 @@ Go to your `localhost:8000` welcome page and click the links to enter into two A
 
 All of your Angular apps are located in the `angular_apps` directory in your Laravel project root directory.  
 
-This is where you develop in TypeScript, JavaScript, HTML and CSS and you will use  **npm** commands to compile and distribute code into `public`.  
+This is where you develop in TypeScript, JavaScript, HTML, CSS, SCSS, SASS and you will use  **npm** commands to compile and distribute code into `public`.  
 
 This system supports browsers synchronization so you can watch changes in your browsers as you save them.  
 Keep reading it will be explained bellow how do you start browsers sync in the [Listing and Explaining Commands](#listing-and-explaining-commands) section.  
 
 Laravel `public` directory is distribution directory and you don't code in it directly.  
-You code your apps in `angular_apps` directory and use build tools provided to publish HTML, JS, CSS files to `public` directory, and to compile TS files to JS and publish them to `public` directory as well.  
+You code your apps in `angular_apps` directory and use build tools provided to publish HTML, JS, CSS files to `public` directory, and to compile TS files to JS, SCSS/SASS files to CSS and publish them to `public` directory as well.  
 
 ## Structure of the `angular_apps` Directory  
 
 These two simple demo Angular programs can be clear guide how do you integrate your own apps.  
 I will detail how do you integrate your own app in the [Integrating Your Own Angular App](#integrating-your-own-angular-app) section.  
 
-In this folder you will have two completely separatate indenpendent Angular applications (App1 and App2).  
- All of the code specific to them is in their own directories:  
+In this folder you will have two completely separatate indenpendent Angular applications App1 and App2.  
+All of the code specific to them is in their own directories:  
  + App1
  + App2
-
-If you want to publish JS and CSS files to `public/js` and `public/css` put them in:  
-+ js
-+ css
-
-that is `angular_apps/js` and `angular_apps/css` to be clear.  
 
 Next we have:  
 + config
@@ -106,7 +100,7 @@ After you run `npm run ng-init` and `npm run ng-compile` you will notice some ne
 * main.app2.js
 * systemjs-angular-loader.js
 
-Basically all of your HTML, CSS, JS and compiled TS files from `angular_apps` are distributed to `public` with the addition of **`Ng`** directory, which is the place where Angular lives.  
+Basically all of your HTML, CSS, JS and compiled TS and SCSS/SASS files from `angular_apps` are distributed to `public` with the addition of **`Ng`** directory, which is the place where Angular and friends live.  
 
 ## Listing and Explaining Commands  
 
@@ -116,16 +110,16 @@ Before you run commands make sure you **cd** to your Laravel project root direct
 Also if you use **npm install** or **npm update** to update to a new version of Angular you can use this command to push new version of Angular to `public/Ng` directory.  
 In that case you don't have to delete `public/Ng` directory, running this command will reinstall all files and add new ones, if any.*  
 
-* **`npm run ng-compile`** - *distributes your HTML, JS, CSS files and compiles TS files to JavaScript and distributes them also.*  
+* **`npm run ng-compile`** - *distributes your HTML, JS, CSS files, also compiles TS files to JavaScript, SCSS/SASS files to CSS and distributes them also.*  
 
-* **`npm run ng-compile-prod`** - *same as the above but produces minified HTML and CSS files, also compiled JS files from the TS, are minified.  
+* **`npm run ng-compile-prod`** - *same as the above but produces minified HTML and CSS files, also compiled files, TS to JS and SCSS/SASS to CSS are minified.  
 Note that original JS files in your `angular_apps` directory (the ones that were not TS) will not be minified by this command. That is because I can't find decent,stable and reliable Gulp plugin that supports minifing ES6, if you know of one let me know.*  
 
 * **`npm run ng-bootstrap`** - *this command is combination of `npm run ng-init`, `npm run ng-add-3rd-party` and `npm run ng-compile`, it installs Angular, installs 3rd party libraries and compiles your apps in one go.  
 It is useful when you join existing project. Whith just this command you can build working application on your machine and start working on it.*  
 
 * **`npm run ng-watch`** - *starts watch mode, starts browser and puts your browser in sync, actually all the browsers tabs that have wached URL open.  
-When you change, add, move, delete or rename HTML, JS, CSS and TS files in `angular_apps` it will distribute them in real time to `public`. TS files will be compiled to JS first than distributed.  
+When you change, add, move, delete or rename HTML, JS, CSS, SCSS, SASS and TS files in `angular_apps` it will distribute them in real time to `public`. TS files will be compiled to JS first and SCSS/SASS files to CSS than distributed.  
 After each change your browser(s) wached URL tabs will be reloaded.  
 Note that this command is proxying your server so before you use it start your development server e.g. `php artisan serve`.  
 You can delete entire folders with files in it in build directory (`angular_apps`) and corresponding files in that folder in distribution (`public`) directory will be deleted but not the folder itself.  
@@ -135,7 +129,8 @@ So to clean empty directories from `angular_apps` and `public` directories after
 * **`npm run ng-watch-nosync`** - *same as the above except it will not start nor sync your browser(s). So there is no need to start development server first.  
 Use it when you want to work in a watch mode but without browser synchronization.*  
 
-* **`npm run ng-publish-templates`** - *this command wil only publish your HTML, JS and CSS files without minifying them. It will not compile nor publish TS files.*  
+* **`npm run ng-publish-templates`** - *this command will publish your HTML, JS, CSS files and compile SCSS/SASS to CSS without minifying them.  
+It will not compile nor publish TS files.*  
 
 * **`npm run ng-clean`** - *opposite of `npm run ng-compile`.  
 Cleans up `public` directory.  
@@ -195,7 +190,7 @@ You can pass `--build` switch to only remove empty directories and sub-directori
   npm run ng-remove-empty-dirs -- --dist
   ```
 
-  *This command might come handy if you have some empty directories in `public` and/or `angular_apps` after deleting files while running `npm run ng-watch` command.*  
+  *This command might come handy if you have some empty directories in `public` and/or `angular_apps` after deleting files while working in the watch mode.*  
 
 **More about `npm run ng-watch`**  
 If you use `127.0.0.1:8000` as your host:port when you start your development server, you can use this command as is.  
@@ -232,7 +227,7 @@ So for example, **not** ~~`php -S localhost:8080`~~, but `php -S 127.0.0.1:8080`
 
 Details on how you integrate your own Angular app from start to finish:  
 
-> Directory in which this new app will be is gonna be called `NewApp`, in production you should use more descriptive name of what your app does e.g. `Store` or `StockManagement`. That way if you have more Angular applications you can see right away what each one is designated to do soon as you look into `angular-apps` directory.  
+> Directory in which this new app will be is gonna be called `NewApp`, in production you should use more descriptive name of what your app does e.g. `Store` or `StockManagement`. That way if you have more Angular applications you can see right away what each one is designated to do soon as you look into `angular_apps` directory.  
 
 If you already haven't done so trough composer or manually, run these commands.  
 
@@ -307,7 +302,7 @@ Put this route link somewhere on your site as an entry point to your new Angular
 Notice the references to the config file `/config/mynewapp.config.js` and bootstrap file `/main.mynewapp.js` in the **`newNgApp.blade.php`**.  
 So next step is to create those files.  
 
-**`mynewapp.config.js` :**  
+**`mynewapp.config.js`**:  
 Create a file with this name in the `angular_apps/config` directory and just copy/paste all of the content from `angular_apps/config/app1.config.js` into it.  
 Change only line **#14** to point to the directory where your new Angular app will be. Lets say our new app will be in the `angular_apps/NewApp` directory.  
 So in **`angular_apps/config/mynewapp.config.js`** after you copy/paste, change this:  
