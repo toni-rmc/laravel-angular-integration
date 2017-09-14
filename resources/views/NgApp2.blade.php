@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <base href="{{ route('app2', [], false) }}/" />
-    <title>Angular App 2 Example</title>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Angular App 2 Example</title>
+    <base href="{{ route('app2', [], false) }}/" />
+
     <link rel="stylesheet" href="/css/styles.css" />
 
      <!-- Polyfills -->

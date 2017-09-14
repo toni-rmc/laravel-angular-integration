@@ -27,6 +27,19 @@ Route::get('angular-app2/{path?}', function () {
 })->where('path', '.*')
   ->name('app2');
 
+
+// This route is path to Angular application created with angular-cli tool.
+// It's no different from other Angular routes.
+Route::get('ngcli/app1/{path?}', function () {
+    return view('ng-cli-app1');
+})->where('path', '.*')
+  ->name('ng_app1');
+
+Route::get('ngcli/app2/{path?}', function () {
+    return view('ng-cli-app2');
+})->where('path', '.*')
+  ->name('ng_app2');
+
 // Default route.
 Route::get('/', function () {
     return view('welcome');

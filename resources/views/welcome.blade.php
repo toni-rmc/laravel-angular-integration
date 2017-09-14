@@ -83,6 +83,8 @@
                 </div>
                 <div><a href="{{ route('app1') }}">Angular App 1</a></div>
                 <div><a href="{{ route('app2') }}">Angular App 2</a></div>
+                <div><a href="{{ route('ng_app1') }}">Angular App 1 built with <b>angular-cli</b></a></div>
+                <div><a href="{{ route('ng_app2') }}">Angular App 2 built with <b>angular-cli</b></a></div>
                 <div class="links">
                     <a href="https://laravel.com/docs">Documentation</a>
                     <a href="https://laracasts.com">Laracasts</a>
