@@ -4,7 +4,7 @@ const ProgressPlugin = require('webpack/lib/ProgressPlugin');
 const CircularDependencyPlugin = require('circular-dependency-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
-const licensePlugin = require('license-webpack-plugin');
+const licensePlugin = require('license-webpack-plugin').LicenseWebpackPlugin;
 const autoprefixer = require('autoprefixer');
 const postcssUrl = require('postcss-url');
 const cssnano = require('cssnano');
@@ -13,7 +13,7 @@ const CleanPlugin = require('clean-webpack-plugin');
 const { NoEmitOnErrorsPlugin, EnvironmentPlugin, HashedModuleIdsPlugin } = require('webpack');
 const { GlobCopyWebpackPlugin, BaseHrefWebpackPlugin, SuppressExtractedTextChunksWebpackPlugin } = require('@angular/cli/plugins/webpack');
 const { CommonsChunkPlugin, ModuleConcatenationPlugin, UglifyJsPlugin } = require('webpack').optimize;
-const { AotPlugin } = require('@ngtools/webpack');
+const { AngularCompilerPlugin } = require('@ngtools/webpack');
 
 const nodeModules = path.join(process.cwd(), 'node_modules');
 const realNodeModules = fs.realpathSync(nodeModules);
@@ -518,7 +518,7 @@ module.exports = {
       "sourceMap": false,
       "comments": false
     }),
-    new AotPlugin({
+    new AngularCompilerPlugin({
       "mainPath": "main.ts",
       "replaceExport": false,
       "hostReplacementPaths": {

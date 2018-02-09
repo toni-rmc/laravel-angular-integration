@@ -10,7 +10,7 @@ const cssnano = require('cssnano');
 const { NoEmitOnErrorsPlugin, SourceMapDevToolPlugin, NamedModulesPlugin } = require('webpack');
 const { GlobCopyWebpackPlugin, NamedLazyChunksWebpackPlugin, BaseHrefWebpackPlugin } = require('@angular/cli/plugins/webpack');
 const { CommonsChunkPlugin } = require('webpack').optimize;
-const { AngularCompilerPlugin } = require('@ngtools/webpack');
+const { AotPlugin } = require('@ngtools/webpack');
 
 const nodeModules = path.join(process.cwd(), 'node_modules');
 const realNodeModules = fs.realpathSync(nodeModules);
@@ -482,7 +482,7 @@ module.exports = {
       "async": "common"
     }),
     new NamedModulesPlugin({}),
-    new AngularCompilerPlugin({
+    new AotPlugin({
       "mainPath": "main.ts",
       "replaceExport": false,
       "hostReplacementPaths": {
