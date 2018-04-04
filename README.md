@@ -1,4 +1,5 @@
 # Laravel - Angular Integration  
+![Laravel](https://github.com/toni-rmc/laravel-angular-integration/blob/master/docs/images/laravel.png) ![Angular](https://github.com/toni-rmc/laravel-angular-integration/blob/master/docs/images/angular.png)  
 
 This project provides tools and shows you an easy way to integrate one or more Angular apps into your Laravel project.  
 
@@ -32,3 +33,4 @@ This project no longer supports SistemJS build as it is outdated by now. Develop
 ## License  
 
 MIT  
+ 
