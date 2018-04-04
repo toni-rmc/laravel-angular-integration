@@ -1,22 +1,22 @@
-## Yet Another Angular App 
+## Making Another Angular App 
 
 For this example name of the new Angular app will be `StockManagement`.  
 
-First **cd** to `angular` directory and run:  
+First **cd** to `angular` directory and run  
 
 ```
 ng new StockManagement
 cd StockManagement
 ```
 
-Than run:  
+Than run  
 
 ```
 ng eject
 ```
 
-This commant will generate `webpack.config.js` file in `StockManagement`.  
-Delete it, other one will be used later.
+This command will generate `webpack.config.js` file in `StockManagement`.  
+Delete it, other config files will be used.
 
 Open `.angular-cli.json` and change `ejected` value from `true` to `false`  
 
@@ -33,11 +33,13 @@ Install new packages with
 npm install
 ```
 
-You will need `clean-webpack-plugin` for production bundling so install that as well:
+You will need `clean-webpack-plugin` for production bundling so install that as well
 
 ```
 npm install clean-webpack-plugin --save-dev
 ```
+
+Copy three config files `angular/webpack_config/base/base.config.js`, `angular/webpack_config/dev/dev.config.js` and `angular/webpack_config/prod/prod.config.js` to your app root, e.g. `angular/StockManagement`.  
 
 That's it start making your app using all the benefits of **angular-cli** tool, build it, test it with `ng serve` and so on.  
 
@@ -75,32 +77,27 @@ Here is some minimal setup but you can add more `html`, `php` and/or Laravel bla
 </html>
 ```
 
-After that decide do you want to integrate and bundle for development or for production.  
-Choose `webpack.config.js` from `angular/webpack_config/dev` for development bundle or one from `angular/webpack_config/prod` for production bundle.
+## Packaging  
 
-Copy/paste it in your Angular app root in this case `angular/StockManagement` and run:
+To package for development use `npm run build`.  
+This will produce bundle suitable for the development i.e. files are not minified, source map files are generated etc...  
 
-```
-npm run build
-```
+For the production packing use `npm run build-prod`.  
+This will produce bundle suitable for the production i.e. files are minified, no source map files, license generated, hashing is used in generated bundles names etc...  
 
-You will see new folder `StockManagement` in `public` and new blade file `StockManagement.blade.php` in `resources/views`.  
-Generated blade file will have all the neccesary links to bundles generated.  
+After running one of these commands there will be a new folder `StockManagement` in `public` and a new blade file `StockManagement.blade.php` in `resources/views`.  
+Generated blade file will have all the necessary links to generated bundles.  
 
-Make a link somwhere on your site to enter in your new app.  
-I have used `stock_manage` as a route name so in this case link would be:
+## Entering Into Angular App
+
+Make a link somewhere on your site to enter in your new app.  
+I have used `stock_manage` as a route name so in this case link would be  
 
 ```php
 <a href="{{ route('stock_manage') }}">Stock</a>
 ```
 
-After that you can continue to develop your app as a standalone using `ng` tool. You can start it in the browser as a standalone using `ng serve` on `http://localhost:4200/` and at the same time you can serve entire Laravel application on other port e.g. `http://localhost:8000/` with `php artisan serve`.  
-Once you are ready to deploy new changes into Laravel just run
+Than you can continue to develop your app as a standalone using `ng` tool. You can start it in the browser as a standalone using `ng serve` on `http://localhost:4200/` and at the same time you can serve entire Laravel application on other port e.g. `http://localhost:8000/` with `php artisan serve`.  
+Once you are ready to deploy new changes into Laravel run `npm run build` for `dev` packaging or `npm run build-prod` for `prod` packaging.  
 
-```
-npm run build
-```
-
-again.  
-
-Also when your app is ready for production copy/paste `webpack.config.js` from `angular/webpack_config/prod` into application root, in this case `angular/StockManagement` replacing the development `webpack.config.js`, and run `npm run build` again.  This will delete and re-create `StockManagement` in Laravel `public` directory but this time it will be bundled for production use, and also view file in `resources/views/StockManagement.blade.php` will be re-created and minified with all the necessary `<script>` tags generated.  
+Every time you run one of these build commands `StockManagement` app in Laravel `public` directory will be re-created and also view file `resources/views/StockManagement.blade.php` will be re-created as well.  

@@ -2,12 +2,9 @@
 
 This document details how you integrate Angular applications built with **angular-cli** into Laravel.  
 
-All of the Angular apps you bild go into `angular` directory in your Laravel project root folder.  
+All of the Angular apps you build go into `angular` directory in your Laravel project root folder.  
 
-In `angular` folder there are two demo apps, `app1` and `app2`.  
-Directory `webpack_config` is place where Webpack config files are stored.  
-There are two versions of `webpack.config.js` file, one for bundling app for development found in `angular/webpack_config/dev` and one for production found in `angular/webpack_config/prod`.  
-
+In `angular` folder there are two demo apps, `app1` and `app2`.   
 Change current working directory to the Angular application you want to work on e.g.  
 
 ```
@@ -21,7 +18,9 @@ After you run and test Angular app as a standalone you can easily integrate it i
 
 ## Integration Steps  
 
-First create route in `routes/web.php` which will lead to the app.  
+**Note:** For the two demo Angular apps that come with this project, `angular/app1` and `angular/app2` integration steps below are already made.  
+
+First create a route in `routes/web.php` which will lead to the app.  
 Route should look like this:  
 
 ```php
@@ -32,9 +31,9 @@ Route::get('your/ngpath/{path?}', function () {
 ```
 
 Follow the convention and let the name of the view file be the same as the root folder of your Angular app e.g. `app1`, you can change that later if you want.  
-Do not create view file just define route for now.  
+Do not create view file just define route.  
 
-Next in `angular/app1/src/laravel-ng-template.html` put all the code you want your entry page to have.  
+Next in the `angular/app1/src/laravel-ng-template.html` put all the code you want your entry page to have.  
 
 **`angular/app1/src/laravel-ng-template.html`**  
 
@@ -56,50 +55,41 @@ Next in `angular/app1/src/laravel-ng-template.html` put all the code you want yo
 </html>
 ```
 
-`<base href="{{ route('ng_app1', [], false) }}/">` - this line dynamically sets proper base URL using route name. This allows for later changes of route path in `routes/web.php` without the need to edit anything else.  
++ `<base href="{{ route('ng_app1', [], false) }}/">` - this line dynamically sets proper base URL using route name. This allows for later changes of route path in the `routes/web.php` without the need to edit anything else.  
 
-Application will be in `public` directory so to reference any files in the template like `favicon.ico` precede it with app folder name beginning with `/` e.g. `/app1/favicon.ico`.
++ Application will be in `public` directory so to reference any files in the template like `favicon.ico` precede it with app folder name beginning with `/` e.g. `/app1/favicon.ico`.  
+Don't reference external `.js`, `.css` files and assets directly in the template, instead point to them in `.angular-cli.json` file in `apps[].scripts`, `apps[].styles` and `apps[].assets` sections respectively, this way they will be bundled.  
 
-`<app-root></app-root>` - root selector of your Angular app, you can change it if you are using some other name.  
++ `<app-root></app-root>` - root selector of your Angular app, you can change it if you are using some other name.  
 
 You can put Laravel blade code and even PHP code in this file if you need to.  
 
-After that from your Angular app root directory (`angular/app1` in this case) run:
+## Bundling for `dev` or `prod`
+
+From your Angular app root directory (`angular/app1` in this case) for the `development` build run  
 
 ```
 npm run build
 ```
 
-This command will pack app into bundles and deploy it into Laravel `public` directory.  
-It will also create blade view in `resources/views` based on your Angular root folder name, in this case `app1.blade.php` file will be created.  
-
-Generated blade file will have all of your code you have put in `angular/app1/src/laravel-ng-template.html` plus all of the needed includes of bundled files in `<script>` and `<link>` tags.  
-
-Start the server and test the aplication.  
-
-## Packing for **dev** and **prod**  
-
-There are two versions of `webpack.config.js` file, one for development bundling and one for production bundling.  
-Development version is located in `angular/webpack_config/dev` and production version in `angular/webpack_config/prod`.  
-`webpack.config.js` has to be copied in Angular app root folder, `angular/app1` in this example.  
-
-Depending on do you want to pack for development or production copy/paste `webpack.config.js` file from one of these locations to Angular app root folder and run:  
-
+and for the `production` build run  
 
 ```
-npm run build
+npm run build-prod
 ```
 
-Every time you run this command fresh version of `resources/views/<app_root_folder_name>.blade.php` will be created, in this case `resources/views/app1.blade.php` and old distribution in `public` folder will be deleted (if exists) and replaced with new distributed program.  
+Both these commands will pack app suitable for `dev` or `prod` bundles and deploy it into Laravel `public` directory.  
+Blade view in `resources/views` will be created based on your Angular app root folder name, in this case `app1.blade.php` file will be created.  
 
-All left to do is create a link to enter into Angular application.  
-Pick a place and using route name create a link
+Generated blade file will have all of your code you have put in `angular/app1/src/laravel-ng-template.html` plus all of the needed includes of generated bundled files in `<script>` and `<link>` tags.  
+When bundling for `prod` is used it will be minified.  
+
+Construct a link to enter into Angular application.  
+Pick a place and using route name create a link, in this case route name is `ng_app1`.  
 
 ```
-<a href="{{ route('ng_app1') }}">Angular app link</a>
-```
-
-Of course change `route('ng_app1')` to match your route name defined in `routes/web.php`  
+<a href="{{ route('ng_app1') }}">Angular App 1</a>
+```  
 
 ## Making More Angular Apps  
 

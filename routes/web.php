@@ -15,7 +15,7 @@
 // Take optional 'path' parameter which captures the rest of the URI.
 //  - name('<app-name>'): so we have named route, that way if we change routes we don't have to change files.
 //  - where('path', '.*'): use regex for optional 'path' that will ignore the rest of the URI
-// so Laravel doesn't get in the way of passing route to Angular.
+// so Laravel doesn't get in the way of passing routes to Angular.
 
 Route::get('ngcli/app1/{path?}', function () {
     return view('app1');
